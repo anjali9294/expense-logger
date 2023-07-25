@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>
+      Add Expense
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismissModal()">
+        <ion-icon name="close-circle"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-card>
+    <ion-item>
+      <ion-label>Amount $: </ion-label>
+      <ion-input type="number" #amount></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Description: </ion-label>
+      <ion-input type="text" #description></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Expense Type: </ion-label>
+      <ion-select value="Food" okText="Done" #type>
+        <ion-select-option *ngFor="let item of expenseTypes" [value]="item.name">
+          {{item.name}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+  </ion-card>
+  <ion-button (click)="logExpenseInput(amount, description, type)">
+    log expense
+  </ion-button>
+</ion-content>
