@@ -6,15 +6,41 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" padding>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="presentAddComponent()">
       <ion-icon name="logo-usd"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-    <ion-fab-button (click)="createExpenseInstance()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Today's Total: {{todaysTotal}}</ion-card-title>
+    </ion-card-header>
+    <ion-item>
+      <ion-icon slot="start" name="calendar"></ion-icon>
+      <ion-label>Date</ion-label>
+      <ion-datetime-button datetime="datetime" color="primary"></ion-datetime-button>
+
+      <ion-modal [keepContentsMounted]="true" color="primary">
+        <ng-template color="primary">
+          <ion-datetime id="datetime" color="primary"></ion-datetime>
+        </ng-template>
+      </ion-modal>
+
+    </ion-item>
+  </ion-card>
+  <ion-card *ngFor="let expense of expenses">
+    <ion-card-header color="dark">
+      <ion-card-subtitle>{{expense.date | date:'medium'}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-item>
+      <ion-icon name="logo-usd" slot="start"></ion-icon>
+      <ion-label>{{expense.amount}}</ion-label>
+    </ion-item>
+    <ion-card-content>
+      <ion-card-subtitle>Category:{{expense.type}}</ion-card-subtitle>
+      <ion-card-subtitle>Description:{{expense.description}}</ion-card-subtitle>
+
+    </ion-card-content>
+  </ion-card>
 </ion-content>

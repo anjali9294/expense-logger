@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {
   IonInput,
   IonSelect,
   IonTextarea,
   ModalController,
+  ToastController,
 } from '@ionic/angular';
+import { Expense } from 'src/app/modal/expense';
+import { ExpenseService } from 'src/app/services/expense.service';
 
 @Component({
   selector: 'app-add',
@@ -12,12 +15,27 @@ import {
   styleUrls: ['./add.component.scss'],
 })
 export class AddComponent implements OnInit {
-  constructor(private modalController: ModalController) {}
+  @Input('date') date: Date = new Date();
+  constructor(
+    private modalController: ModalController,
+    private toastController: ToastController,
+    private expenseService: ExpenseService
+  ) {}
 
   ngOnInit() {}
 
   dismissModal() {
     this.modalController.dismiss();
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Please Enter correct Amount',
+      duration: 1000,
+      position: 'top',
+      color: 'danger',
+    });
+    toast.present();
   }
 
   expenseTypes: any[] = [
@@ -119,7 +137,25 @@ export class AddComponent implements OnInit {
     },
   ];
 
-  logExpenseInput(amount: IonInput, description: IonTextarea, type: IonSelect) {
-    console.log(amount.value, type.value, description.value);
+  addExpense(amount: IonInput, description: IonInput, type: IonSelect) {
+    const numberRegex = /^\d+(\.\d{1,2})?$/;
+
+    if (isNaN(Number(amount.value)) || amount.value === '') {
+      this.presentToast();
+      return;
+    }
+
+    const amountValue = Number(amount.value);
+    const descriptionValue =
+      description.value != null ? description.value.toString() : '';
+
+    const expense = new Expense(
+      amountValue,
+      type.value,
+      descriptionValue,
+      this.date
+    );
+    this.expenseService.addExpense(expense);
+    this.dismissModal();
   }
 }
